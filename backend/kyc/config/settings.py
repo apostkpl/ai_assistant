@@ -1,10 +1,9 @@
 import os
 import yaml
 from pydantic import BaseModel, Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict, PydanticBaseSettingsSource, InitSettingsSource
 
 class AppConfig(BaseModel):
-    # app block config in config.yaml
     environment: str = "dev"
     secret_key: str = Field(..., description="Secret key for JWT token generation")
     token_expire_minutes: int = 60
@@ -13,10 +12,6 @@ class DatabaseConfig(BaseModel):
     url: str = Field(..., description="Postgres connection string")
 
 class EmailConfig(BaseModel):
-    """
-    SMTP configurations.
-    Currently populated with Resend placeholders.
-    """
     smtp_host: str = "smtp.resend.com"
     smtp_port: int = 587
     smtp_username: str = "resend"
@@ -26,36 +21,48 @@ class EmailConfig(BaseModel):
 
 class CorsConfig(BaseModel):
     cors_origins: list[str] = [
-            "http://localhost:3000",
-            "http://localhost:5173",
-            "http://localhost:8080"
-            """ MORE TO BE ADDED WHEN DEPLOYED"""
-        ]
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:8080",
+        "https://ai.dev-yapping.eu"
+    ]
 
 class Settings(BaseSettings):
-    # bind blocks to settings
     app: AppConfig
     database: DatabaseConfig
-    email: EmailConfig
-    cors: CorsConfig
+    email: EmailConfig = Field(default_factory=EmailConfig)
+    cors: CorsConfig = Field(default_factory=CorsConfig)
 
     model_config = SettingsConfigDict(
         env_file=".env",
-        env_nested_delimiter="__"
+        env_nested_delimiter="__",
+        extra="ignore",
     )
 
     @classmethod
-    def load_settings(cls) -> "Settings":
-        """Load settings from the YAML config file."""
-        config_path = os.path.join(os.path.dirname(__file__), "config.yaml")
+    def settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        *args,
+        **kwargs
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
+        
+        class YamlConfigSettingsSource(InitSettingsSource):
+            def __call__(self) -> dict[str, any]:
+                config_path = os.path.join(os.path.dirname(__file__), "config.yaml")
+                if not os.path.exists(config_path):
+                    return {}
+                with open(config_path, "r") as f:
+                    return yaml.safe_load(f) or {}
+                
+        return (
+            init_settings,
+            env_settings,
+            dotenv_settings,
+            YamlConfigSettingsSource(settings_cls, {})
+        )
 
-        if not os.path.exists(config_path):
-            raise FileNotFoundError(f"Configuration file missing at {config_path}")
-
-        with open(config_path, "r") as f:
-            yaml_data = yaml.safe_load(f)
-
-        return cls(**yaml_data)
-
-# Global settings instance to import across the app
-settings = Settings.load_settings()
+settings = Settings()

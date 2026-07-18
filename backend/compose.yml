@@ -1,0 +1,26 @@
+services:
+  kyc-backend:
+    build:
+      context: .
+      dockerfile: ./kyc/Dockerfile
+    container_name: kyc-service
+    ports:
+      - "8020:8020"
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - ai-assistant-network
+      - global-db-network
+      - global-proxy-network
+
+networks:
+  ai-assistant-network:
+    external: true
+  global-db-network:
+    external: true
+    name: db-net
+  global-proxy-network:
+    external: true
+    name: proxy-net
