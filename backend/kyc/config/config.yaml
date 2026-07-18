@@ -1,0 +1,3 @@
+app:
+  environment: "test"
+  token_expire_minutes: 60
