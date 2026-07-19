@@ -1,4 +1,9 @@
-# AI ASSISTANT WRAPPER
+# BastionAI: Secure Infrastructure for AI Brands
+**Designed for professional agents, built for data sovereignty.**
+
+**BastionAI provides a robust, multi-tenant foundation for businesses looking to deploy proprietary AI agents with complete control. We simplify the complexities of LLM integration and deployment, replacing them with a privacy-first architecture—utilizing Postgres Row-Level Security (RLS) for logical data isolation and transparent, auditable code.**
+
+*Built in alignment with European standards for privacy and data protection, BastionAI allows you to scale your AI brand on a reliable, secure, and sovereign foundation.*
 
 ## Description
 A modular, containerized platform designed to provide a branded, secure, and multi-tenant wrapper for LLM services. The architecture enables businesses to deploy proprietary AI agents with integrated subscription billing and usage management, ensuring data isolation and enterprise-grade security.
