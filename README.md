@@ -30,4 +30,4 @@ A modular, containerized platform designed to provide a branded, secure, and mul
 
 **Development Methodology:** This project utilizes AI-assisted coding to accelerate implementation and ensure robust, production-grade standards through iterative, human-vetted engineering.
 
-**LEGAL NOTICE:** The platform core (backend and frontend) is distributed under the BSD-3-Clause License. All agent-specific training data and proprietary RAG assets remain strictly confidential and the **exclusive property** of the end-user/tenant.
+**LEGAL NOTICE:** The platform core (backend and frontend) is distributed under the **BSD-3-Clause License**. All agent-specific training data and proprietary RAG assets remain strictly confidential and the **exclusive property** of the end-user/tenant.
