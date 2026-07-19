@@ -1,19 +1,21 @@
 import logging
 from datetime import datetime, timedelta, timezone
-from passlib.context import CryptContext
+import bcrypt
 import jwt
 from fastapi import HTTPException, status
 from kyc.config.settings import settings
 
 logger = logging.getLogger(__name__)
 
-CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
 
 def hash_password(password: str) -> str:
     """Hashes a plain text password using bcrypt."""
     try:
-        return CONTEXT.hash(password)
+        password_bytes = password.encode('utf-8')
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(password_bytes, salt)
+        return hashed.decode('utf-8')
     except Exception as e:
         logger.error(f"Catastrophic failure during password hashing. Error: {e}", exc_info=True)
         raise HTTPException(
@@ -24,7 +26,10 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verifies a plain text password against its database hash."""
     try:
-        return CONTEXT.verify(plain_password, hashed_password)
+        return bcrypt.checkpw(
+            plain_password.encode('utf-8'), 
+            hashed_password.encode('utf-8')
+        )
     except Exception as e:
         logger.error(f"Error during password verification (potential hash corruption). Error: {e}", exc_info=True)
         return False

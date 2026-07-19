@@ -14,7 +14,7 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
 
     # State control flags
-    is_active = Column(Boolean, default=True, nullable=False)
+    is_active = Column(Boolean, default=False, nullable=False)
     is_subscribed = Column(Boolean, default=False, nullable=False)
 
     # Audit trail fields

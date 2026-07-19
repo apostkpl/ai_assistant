@@ -39,7 +39,7 @@ class AuthService:
                 last_name=request.profile.last_name,
                 phone_number=request.profile.phone_number
             )
-            new_user.user_profile = new_profile
+            new_user.profile = new_profile
 
         # 4. Commit to database
         try:

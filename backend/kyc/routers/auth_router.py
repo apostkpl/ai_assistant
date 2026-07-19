@@ -7,6 +7,7 @@ from kyc.core.email import send_verification_email
 from kyc.schemas.user import UserRequest, UserResponse, EmailVerificationRequest
 from kyc.schemas.token import Token
 from kyc.services.auth_service import AuthService
+from kyc.core.security import limiter
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -15,6 +16,7 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED
 )
+@limiter.limit("10/minute")
 def register_user(request: UserRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     new_user = AuthService.create_user(db=db, request=request)
     token = create_email_verification_token(new_user.email) #type: ignore

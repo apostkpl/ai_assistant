@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from kyc.models.base import Base
+from kyc.core.database import Base
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"

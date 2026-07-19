@@ -13,7 +13,7 @@ def send_verification_email(to_email: str, token: str) -> None:
     logger.debug(f"Preparing verification email for {to_email}")
 
     # 1. Build the verification URL
-    verify_url = f"http://localhost:8000/auth/verify-email?token={token}" # No domain yet
+    verify_url = f"{settings.app.frontend_url}/auth/verify-email?token={token}" # No domain yet
 
     # 2. Construct the core message
     msg = EmailMessage()

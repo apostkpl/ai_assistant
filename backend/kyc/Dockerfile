@@ -13,5 +13,3 @@ RUN uv pip install --system -r pyproject.toml
 COPY . .
 
 EXPOSE 8020
-
-CMD ["uvicorn", "kyc.main:app", "--host", "0.0.0.0", "--port", "8020"]

@@ -8,8 +8,10 @@ from sqlalchemy import text
 
 from kyc.config.settings import settings
 from kyc.core.database import engine
+import kyc.models  # Ensure all models are imported for Alembic migrations
 from kyc.routers.auth_router import router as auth_router
 from kyc.routers.users_router import router as users_router
+from kyc.routers.system_router import router as system_router
 
 # Configure global basic logging for the application startup
 """ CHANGE LEVELTO INFO IN PRODUCTION"""
@@ -65,5 +67,6 @@ app.add_middleware(
 # 4. Register API Routers
 app.include_router(auth_router)
 app.include_router(users_router)
+app.include_router(system_router)
 
 logger.info("Application successfully booted and ready for traffic.")

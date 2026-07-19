@@ -1,11 +1,11 @@
-import os
-import yaml
 from pydantic import BaseModel, Field
-from pydantic_settings import BaseSettings, SettingsConfigDict, PydanticBaseSettingsSource, InitSettingsSource
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class AppConfig(BaseModel):
-    environment: str = "dev"
-    secret_key: str = Field(..., description="Secret key for JWT token generation")
+    environment: str = "test"
+    version: str = Field(default="1.0.0")
+    frontend_url: str = Field(default="http://localhost:5173")
+    secret_key: str = Field(..., description="Secret key for JWT")
     token_expire_minutes: int = 60
 
 class DatabaseConfig(BaseModel):
@@ -20,12 +20,7 @@ class EmailConfig(BaseModel):
     from_name: str = "KYC Verification"
 
 class CorsConfig(BaseModel):
-    cors_origins: list[str] = [
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://localhost:8080",
-        "https://ai.dev-yapping.eu"
-    ]
+    cors_origins: list[str] = Field(default=["http://localhost:5173"])
 
 class Settings(BaseSettings):
     app: AppConfig
@@ -35,34 +30,8 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(
         env_file=".env",
-        env_nested_delimiter="__",
+        env_nested_delimiter="__",  # Maps APP__ENVIRONMENT to app.environment
         extra="ignore",
     )
-
-    @classmethod
-    def settings_customise_sources(
-        cls,
-        settings_cls: type[BaseSettings],
-        init_settings: PydanticBaseSettingsSource,
-        env_settings: PydanticBaseSettingsSource,
-        dotenv_settings: PydanticBaseSettingsSource,
-        *args,
-        **kwargs
-    ) -> tuple[PydanticBaseSettingsSource, ...]:
-        
-        class YamlConfigSettingsSource(InitSettingsSource):
-            def __call__(self) -> dict[str, any]:
-                config_path = os.path.join(os.path.dirname(__file__), "config.yaml")
-                if not os.path.exists(config_path):
-                    return {}
-                with open(config_path, "r") as f:
-                    return yaml.safe_load(f) or {}
-                
-        return (
-            init_settings,
-            env_settings,
-            dotenv_settings,
-            YamlConfigSettingsSource(settings_cls, {})
-        )
 
 settings = Settings()
