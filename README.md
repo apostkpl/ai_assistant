@@ -5,6 +5,9 @@
 
 *Built in alignment with European standards for privacy and data protection, BastionAI allows you to scale your AI brand on a reliable, secure, and sovereign foundation.*
 
+***
+***
+
 ## Description
 A modular, containerized platform designed to provide a branded, secure, and multi-tenant wrapper for LLM services. The architecture enables businesses to deploy proprietary AI agents with integrated subscription billing and usage management, ensuring data isolation and enterprise-grade security.
 
@@ -43,3 +46,5 @@ A modular, containerized platform designed to provide a branded, secure, and mul
 **Built for:** Organizations that value data ownership, architectural transparency, and the peace of mind that comes with human-vetted AI infrastructure.
 
 **LEGAL NOTICE:** The platform core (backend and frontend) is distributed under the **BSD-3-Clause License**. All agent-specific training data and proprietary RAG assets remain strictly confidential and the **exclusive property** of the end-user/tenant.
+
+***
